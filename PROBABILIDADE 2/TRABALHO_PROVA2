@@ -1,0 +1,149 @@
+###QUESTAO 1
+
+### y(produção de trigo (kg))
+### x1(precipitação pluviométrica (mm))
+### x2(variedade ( 1, 2, 3 e 4))
+### x3(concentração do fertilizante empregado na plantação (1, 2 e 3)) 
+
+y=c(15.6, 16.2, 17.1, 16.7, 15.1, 17.1, 18.3, 17.2, 17.4, 18.4, 19.7, 17.6, 14.8, 13.8, 14.5, 14.4, 15.2, 14.8, 15.1, 16.0, 16.2, 16.8, 17.6, 18.6)
+x1=c(14.4, 13.2, 14.8, 13.6, 14.0, 12.8, 14.4, 13.2, 14.8, 13.6, 14.0, 12.8, 14.4, 13.2, 14.8, 13.6, 14.0, 12.8, 14.4, 13.2, 14.8, 13.6, 14.0, 12.8)
+x2=c(1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4)
+x3=c(1, 1, 2, 2, 3, 3, 1, 1, 2, 2, 3, 3, 1, 1, 2, 2, 3, 3, 1, 1, 2, 2, 3, 3)
+
+### LETRA A
+
+modelo0 = lm(y~x1+x2+x3);
+summary(modelo0);
+anova(modelo0);
+
+modelo1 = lm(y~x1);
+summary(modelo1);
+anova(modelo1);
+
+modelo2 = lm(y~x2);
+summary(modelo2);
+anova(modelo2);
+
+modelo3 = lm(y~x3);
+summary(modelo3);
+anova(modelo3);
+
+modelo4 = lm(y~x1+x2);
+summary(modelo4);
+anova(modelo4);
+
+modelo5 = lm(y~x1+x3);
+summary(modelo5);
+anova(modelo5);
+
+modelo6 = lm(y~x2+x3);
+summary(modelo6);
+anova(modelo6);
+
+
+### LETRA B: Depois de feito todos o modelos possiveis, 
+### analisando os resultados é observavel que nenhuma das variaveis tem significancia. 
+### O que apresenta um resultado mais aceitavel é a variavel 
+### independente x3(concentração do fertilizante empregado na plantação (1, 2 e 3)), 
+### tendo destaque entre as outras com o valor de R² ajustado(0.04568) e a soma 
+### de quadrados estar maior que os demais modelos.
+
+### LETRA C
+ 
+windows();
+par(mfrow=c(2,2));
+plot(modelo3);
+
+### Não é possivel verificar homocedastidade dos resíduos, porque a 
+### variancia dos termos de erro(E) se mostra dispersa com 
+### relação a curva do grafico.
+### Observando o grafico normal Q-Q, mostra que os residuos seguem a distribuição normal
+
+### QUESTAO 2
+
+### y(energia elétrica consumida mensalmente)
+### x1(média da temperatura ambiente)
+### x2(número de dias do mês)
+### x3(média da pureza do produto) 
+### x4 (toneladas de produto produzido)
+
+y=c(240,236,290,274,301,316,300,296,267,276,288,261)
+x1=c(25,31,45,60,65,72,80,84,75,60,50,38)
+x2=c(24,21,24,25,25,26,25,25,24,25,25,23)
+x3=c(91,90,88,87,91,94,87,86,88,91,90,89)
+x4=c(100,95,110,88,94,99,97,96,110,105,100,98)
+
+### LETRA A
+ 
+modelo0=lm(y~x1+x2+x3+x4);modelo0
+summary(modelo0)
+anova(modelo0)
+
+### COMENTARIO: Pelo conjunto de dados analisados, nota-se que nenhuma das 
+### variaveis tem significancia a ponto de ter correlação e o R² ajustado 
+### está com um valor bem abaixo de 1, que não eh bom. Partindo pra tabela ANOVA 
+### a variavel X1 tem o maior valor na soma de quadrados e X2 apresenta 
+### um valor relativamente mais baixo que X1, mas bem maior que X3 e X4, 
+### tornando X1 e X2 mais aceitaveis que os demais. Este modelo não seria o ideal.
+
+### LETRA B
+
+### x1 = 75, x2 = 24, x3 = 90, x4 = 98
+
+### y = -102,7132 + 0,6053*B1 + 8,9236*B2 + 1,4374*B3 + 0,0136*B4
+### y = -102,7132 + 0,6053*75 + 8,9236*24 + 1,4374*90 + 0,0136*98
+### y = -102,7132 + 45,3975 + 214,1664 + 129,366 + 1,3328
+### y = 287,5495
+
+
+
+###QUESTAO 3
+
+### Y: Número de horas trabalhadas por dia
+### X1: número de cheques descontados (pagos e cobrados)
+### X2: número de pagamentos recebidos pelos funcionários da empresa
+### X3: número de documentos processados e enviados ao banco para compensação
+### X4: número de ordens de pagamento, certificados e recibos de vendas emitidos pelos funcionários.
+### X5: número de correspondências processadas e enviadas aos clientes
+### X6: número de documentos processados e outras atividades
+
+y=c(130.7,113.0,125.4,131.1,133.2,178.2,121.1,135.5,109.8,119.0,103.8,114.2,118.4,104.6,134.0,140.2,110.9,101.2,122.9,97.5,124.1,120.1,138.4,108.5,97.5,130.6,112.6,137.7,104.1,113.2)
+
+x1=c(654,457,429,483,915,813,616,986,550,448,505,501,712,642,491,590,517,455,723,416,960,535,642,489,413,773,413,622,639,747)
+
+x2=c(683,479,823,735,1018,857,924,1247,965,688,561,735,943,758,809,638,671,516,835,578,878,1278,848,663,688,619,808,734,729,1087)
+
+x3=c(183,89,196,157,211,218,312,428,461,244,261,154,162,252,149,198,116,139,300,112,277,306,352,148,115,170,95,163,214,353)
+
+x4=c(123,49,115,82,116,169,105,82,94,101,121,103,83,64,82,99,48,112,89,238,47,129,100,103,77,93,67,81,53,77)
+
+x5=c(4032,5057,6429,5693,4091,6023,7392,4698,4439,8770,6418,3708,5682,4854,7234,6807,5616,4389,4079,6944,4673,7218,6595,6616,6140,2641,5692,4956,4615,6028)
+
+x6=c(503,698,737,829,832,796,539,1207,683,707,458,536,989,782,854,891,441,580,980,512,1100,1019,676,671,483,1328,549,683,1223,826)
+
+
+### LETRA A
+
+modelo0 = lm(y~x1+x2+x3+x4+x5+x6);
+summary(modelo0);
+anova(modelo0);
+
+modelo1 = lm(y~x1);
+summary(modelo1);
+anova(modelo1);
+
+modelo2 = lm(y~x2);
+summary(modelo2);
+anova(modelo2);
+
+modelo3 = lm(y~x1+x2);
+summary(modelo3);
+anova(modelo3);
+
+
+### LETRA B: Analisando o modelo 0, observamos que apenas o x1 
+### apresenta alguma significancia, então testamos os modelos 
+### separados x1 e x2 as combinações deles e comparando o R² e a
+### soma de quadrados de todos os modelos analisados, concluimos que 
+### o modelo 0 é que melhor pois apresenta um equilibrio maior entre os 
+### valores de R² e soma de quadrados do que os demais modelos.

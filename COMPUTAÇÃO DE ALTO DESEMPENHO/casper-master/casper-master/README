@@ -1,0 +1,153 @@
+                                 Casper Notes
+
+====================================
+Introduction
+====================================
+
+This project provides a portable and flexible process-based asynchronous progress
+model for MPI remote memory access (RMA) communication.
+
+
+====================================
+Getting Started
+====================================
+
+1. Installation
+
+    The simplest way to configure Casper is using the following
+    command-line:
+
+        $ ./configure --prefix=/your/casper/installation/dir CC=/path/to/mpicc
+
+    If you have an MPI installation in your path (`which mpicc`), you
+    do not need to explicitly provide the CC variable:
+
+        $ ./configure --prefix=/your/casper/installation/dir
+
+    Once you are done configuring, you can build the source and
+    install it using:
+
+        $ make
+        $ make install
+
+2. To check if Casper built correctly, you can do the following:
+
+        $ make check
+
+3. To start using Casper, you need to let Casper intercept your calls
+   to MPI before they reach the MPI library.
+
+     - If your application is using a dynamic MPI library (common
+       case), you can simply preload the Casper library while
+       executing the application:
+
+           $ mpiexec -genv LD_PRELOAD=/your/casper/installation/dir/lib/libcasper.so -n 4 ./test
+
+     - If your application is using a static MPI library, you'll need
+       to recompile (actually just relink) your application by placing
+       the Casper symbols before the MPI symbols.  You can do so using:
+
+           $ mpicc -o test test.c -lcasper -lmpi
+
+       Once you have linked with Casper, you can run as normal:
+
+           $ mpiexec -n 4 ./test
+
+4. Execution
+
+     - You can set the number of ghost processes per node through the
+       environment variable CSP_NG, it is set to 1 by default.
+
+       [Example 1]
+       Running on 2 node, 2 ghost processes and 6 user processes on eacn node.
+
+           $ mpiexec -genv CSP_NG=2 -np 16 -ppn 8 ./test
+
+       [Example 2]
+       Running on 4 node, 4 ghost processes and 20 user processes on eacn node.
+
+           $ mpiexec -genv CSP_NG=4 -np 96 -ppn 24 ./test
+
+
+====================================
+Support
+====================================
+If you have problems or need any assistance about the Casper
+installation and usage, please contact casper-users@lists.mpich.org
+mailing list.
+
+
+====================================
+Bug Reporting
+====================================
+If you have found a bug in Casper, please contact
+casper-users@lists.mpich.org mailing list.  If possible, please try to
+reproduce the error with a smaller application or benchmark and send
+that along in your bug report.
+
+
+====================================
+Casper Test Suite
+====================================
+Capser includes a set of testing programs located under test/. These programs
+can be compiled and run via:
+
+    $ cd test
+    $ make
+    $ make testing MPIEXEC="<your mpiexec> -n"
+
+For more options to run the test suite, please check:
+
+    $ ./test/runtest -h
+
+====================================
+Environment Variables
+====================================
+1. Basic Variables
+    CSP_NG (integer)
+    Specify the number of ghost processes per node, 1 by default.
+
+2. Advanced Variables (Only specify them if you know what they mean)
+    CSP_RUMTIME_LOAD_OPT (random|op|byte, default random)
+    Specify how to distribute operations when runtime load balancing enabled,
+    random by default.
+
+    CSP_RUNTIME_LOAD_LOCK (nature|force, default nature)
+    Specify how to grant lock when runtime load balancing enabled, nature
+    by default.
+
+
+====================================
+Debugging Options
+====================================
+Enable debugging messages by compiling with "-DCSP_DEBUG -DCSPG_DEBUG".
+    ./configure --prefix=<your installation dir> CC=<your mpicc> \
+                CFLAGS="-DCSP_DEBUG -DCSPG_DEBUG"
+    make && make install
+
+
+====================================
+Known Issues
+====================================
+1. Some MPI features are not or partially supported in Casper.
+    a. MPI Fortran Binding
+    Some MPI Fortran routines are not translated into MPI standard
+    functions, thus cannot be correctly wrapped in Casper. For example,
+    MPICH uses MPIR_* functions to implement following Fortran routines:
+        mpi_comm_get_attr_
+        mpi_comm_set_attr_
+        mpi_type_get_attr_
+        mpi_type_set_attr_
+        mpi_win_get_attr_
+        mpi_win_set_attr_
+        mpi_attr_get_
+        mpi_attr_put_
+
+    b. Dynamic Process Routine
+
+2. Casper currently disables user info "alloc_shared_noncontig=true" in
+   MPI_Win_allocate, to avoid complex management of shared segments
+   displacement on ghost processes.
+
+3. Casper does not support MPI Error Handler Callback in C++ and Fortran
+   Binding.

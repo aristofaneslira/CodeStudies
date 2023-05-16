@@ -1,0 +1,20 @@
+### Aluno: Aristófanes Santos de Lira 
+### Matricula: 152085386
+
+y <- c(15,20,20,40,50,25,10,55,35,30);y
+
+x <- c(8,6,15,20,25,11,5,32,28,20);x
+
+data.frame(y,x)
+
+### Modelo 1 ###
+
+reg1 <- lm(y~x);reg1
+
+summary(reg1)
+
+anova(reg1)
+
+resid = data.frame(y,reg1$fitted.values, reg1$residual);resid
+
+respadr = rstudent(reg1);respadr

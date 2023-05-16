@@ -1,0 +1,68 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09", 
+  "Description": "Template to launch an Amazon Linux instance.", 
+  "Parameters": {
+    "KeyName": {
+      "Description": "Name of an existing EC2 KeyPair to enable SSH access to the instance",
+      "Type": "AWS::EC2::KeyPair::KeyName",
+      "ConstraintDescription": "must be the name of an existing EC2 KeyPair."
+    },
+      "SecurityGroupIds": {
+      "Description": "Security groups that can be used to access the EC2 instances",
+      "Type": "AWS::EC2::SecurityGroup::Id",
+      "ConstraintDescription": "must be list of EC2 security group ids"
+    },
+      "SubnetId": {
+      "Description": "Id of Subnet of the instance",
+      "Type": "AWS::EC2::Subnet::Id",
+      "ConstraintDescription": "must be a SubnetId"
+    }
+  },
+  "Mappings" :
+    {
+    "RegionMap" : {
+      "us-east-1"      : { "AMI" : "ami-05355a6c" },
+      "us-west-2"      : { "AMI" : "ami-0358ce33" },
+      "us-west-1"      : { "AMI" : "ami-3ffed17a" },
+      "eu-west-1"      : { "AMI" : "ami-c7c0d6b3" },
+      "ap-southeast-1" : { "AMI" : "ami-fade91a8" },
+      "ap-southeast-2" : { "AMI" : "ami-d16bfbeb" },
+      "ap-northeast-1" : { "AMI" : "ami-39b23d38" },
+      "sa-east-1"      : { "AMI" : "ami-5253894f" }
+    }
+  },
+  
+  "Resources" : 
+  {
+    "Ec2Instance" : 
+    {
+      "Type" : "AWS::EC2::Instance",
+      "Properties" : 
+      {
+        "ImageId" : { "Fn::FindInMap" : [ "RegionMap", { "Ref" : "AWS::Region" }, "AMI" ]},
+        "KeyName": { "Ref": "KeyName" },
+        "InstanceType" : "m1.small",
+        "NetworkInterfaces" : [{
+          "GroupSet"                 : [{ "Ref" : "SecurityGroupIds" }],
+          "DeviceIndex"              : "0",
+          "DeleteOnTermination"      : "true",
+          "SubnetId"                 : { "Ref" : "SubnetId" }
+        }]
+      }
+    }
+  },
+  "Outputs" : {
+    "InstanceID" : {
+    "Description": "The Instance ID",  
+    "Value" : { "Ref" : "Ec2Instance" }
+    },
+    "AZ" : {
+      "Description" : "Availability Zone of the newly created EC2 instance",
+      "Value" : { "Fn::GetAtt" : [ "Ec2Instance", "AvailabilityZone" ] }
+    },
+    "PrivateIP" : {
+      "Description" : "Private IP of the newly created EC2 instance",
+      "Value" : { "Fn::GetAtt" : [ "Ec2Instance", "PrivateIp" ] }
+    }
+  }
+}

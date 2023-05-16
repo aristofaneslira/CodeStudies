@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+	<script
+			src="http://code.jquery.com/jquery-3.3.1.min.js"
+			integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+			crossorigin="anonymous"></script>
+	<style>
+		html, body {
+			margin  : 0;
+			padding : 0;
+			width   : 100vw;
+			height  : 100vh;
+		}
+
+		.container {
+			width    : 70%;
+			height   : 100%;
+			position : relative;
+		}
+
+		#road {
+			position : absolute;
+			left     : 0;
+			top      : 0;
+		}
+
+		.semaphore {
+			position       : absolute;
+			width          : 20px;
+			height         : 20px;
+		}
+
+		.semaphore * {
+			width : 20px;
+			height        : 20px;
+			border-radius : 50%;
+			position : absolute;
+		}
+
+		.light-red {
+			background-color : red;
+		}
+
+		.light-green {
+			background-color : green;
+		}
+
+		.draggable {
+			position            : absolute;
+			-webkit-user-select : none;
+			-moz-user-select    : none;
+			-ms-user-select     : none;
+			-khtml-user-select  : none;
+			user-select         : none;
+			cursor              : default;
+		}
+
+		.rotate {
+			transform : rotateZ(90deg);
+		}
+
+		.on > .light-red {
+			display : none;
+		}
+
+		.on > .light-green {
+			display : block;
+		}
+
+		.off > .light-red {
+			display : block;
+		}
+
+		.off > .light-green {
+			display : none;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<img src="road.png" alt="" id="road">
+		<div class="draggable semaphore s1 off" style="left: 242px; top: 156px;">
+			<div class="light-red"></div>
+			<div class="light-green"></div>
+		</div>
+		<div class="draggable semaphore s2 rotate off" style="left: 370px; top: 157px;">
+			<div class="light-red"></div>
+			<div class="light-green"></div>
+		</div>
+		<div class="draggable semaphore s3 off" style="left: 541px; top: 159px;">
+			<div class="light-red"></div>
+			<div class="light-green"></div>
+		</div>
+		<div class="draggable semaphore s4 off" style="left: 542px; top: 246px;">
+			<div class="light-red"></div>
+			<div class="light-green"></div>
+		</div>
+		<div class="draggable semaphore s5 rotate off" style="left: 543px; top: 384px;">
+			<div class="light-red"></div>
+			<div class="light-green"></div>
+		</div>
+		<div class="draggable semaphore s6 off" style="left: 422px; top: 383px;">
+			<div class="light-red"></div>
+			<div class="light-green"></div>
+		</div>
+		<div class="draggable semaphore s7 rotate off" style="left: 236px; top: 389px;">
+			<div class="light-red"></div>
+			<div class="light-green"></div>
+		</div>
+		<div class="draggable semaphore s8 rotate off" style="left: 235px; top: 288px;">
+			<div class="light-red"></div>
+			<div class="light-green"></div>
+		</div>
+	</div>
+
+	<script>
+		function rand( min, max ) {
+			return Math.floor( Math.random() * (max - min + 1) ) + min;
+		}
+
+		$( function ( document ) {
+			// Enable ECMAScript 5 strict mode within this function:
+			'use strict';
+
+			// Obtain a node list of all elements that have class="draggable":
+			var draggable      = document.getElementsByClassName( 'draggable' ),
+				draggableCount = draggable.length, // cache the length
+				i; // iterator placeholder
+
+			// This function initializes the drag of an element where an
+			// event ("mousedown") has occurred:
+			function startDrag( evt ) {
+
+				// The element's position is based on its top left corner,
+				// but the mouse coordinates are inside of it, so we need
+				// to calculate the positioning difference:
+				var diffX = evt.clientX - this.offsetLeft,
+					diffY = evt.clientY - this.offsetTop,
+					that  = this; // "this" refers to the current element,
+								  // let's keep it in cache for later use.
+
+				// moveAlong places the current element (referenced by "that")
+				// according to the current cursor position:
+				function moveAlong( evt ) {
+					that.style.left = (evt.clientX - diffX) + 'px';
+					that.style.top  = (evt.clientY - diffY) + 'px';
+				}
+
+				// stopDrag removes event listeners from the element,
+				// thus stopping the drag:
+				function stopDrag() {
+					document.removeEventListener( 'mousemove', moveAlong );
+					document.removeEventListener( 'mouseup', stopDrag );
+				}
+
+				document.addEventListener( 'mouseup', stopDrag );
+				document.addEventListener( 'mousemove', moveAlong );
+			}
+
+			// Now that all the variables and functions are created,
+			// we can go on and make the elements draggable by assigning
+			// a "startDrag" function to a "mousedown" event that occurs
+			// on those elements:
+			for ( i = 0; i < draggableCount; i += 1 ) {
+				draggable[i].addEventListener( 'mousedown', startDrag );
+			}
+
+			let semaphores = [];
+			setInterval( function () {
+
+				$.get('semaphores.txt',data => {
+					// for ( let i = 0; i < 8; i++ ) {
+					// 	semaphores[i] = rand( 0, 1 );
+					// }
+					semaphores = data.split('').map(item => parseInt(item));
+					console.log("data ->",semaphores);
+
+					semaphores.forEach( ( semaphore, index ) => {
+						let elem = $( '.s' + (index + 1) );
+						elem.removeClass( "off" );
+						elem.removeClass( "on" );
+						if ( semaphore) {
+							elem.addClass( 'on' );
+						} else{
+							elem.addClass( 'off' );
+						}
+					} )
+				});
+
+			}, 1000 )
+		}( document ) );
+	</script>
+</body>
+</html>

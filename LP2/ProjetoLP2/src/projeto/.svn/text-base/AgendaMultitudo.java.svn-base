@@ -1,0 +1,1022 @@
+package projeto;
+
+import java.io.*;
+import java.util.*;
+
+/**
+ * Calsse que representa uma agenda multifuncional
+  * 
+ * @author Demétrio Góis - demetrio.gois@gmail.com
+ * @author Rodrigo Santos - ccc.rodrigo@gmail.com
+ * @author Bernard Lenin - bernard.lenin4@gmail.com
+ * @author Alisson Carlos - alissonccsufcg@gmail.com
+ * 
+ * @version 1.0
+ * 
+ * 			Copyright (C) 2011 Universidade Federal de Campina Grande.
+ */
+
+public class AgendaMultitudo {
+
+	final static String TITULO = "Agenda Mutltitudo 1.0\n";
+	final static String MENU_PRINCIPAL = "Menu: \n" +
+			"(1) Exibir e atualizar perfil\n" +
+			"(2) Adicionar evento\n" +
+			"(3) Cadastrar contatos\n" +
+			"(4) Adicionar contatos a eventos\n" +
+			"(5) Atualizar contatos\n" +
+			"(6) Remover contatos\n" +
+			"(7) Buscar eventos por um contato\n" +
+			"(8) Exibir informacoes de contato\n" +
+			"(9) Sair\n";
+	final static String ARQUIVO_PERFIL = "src/ArquivoPerfil.dat", ARQUIVO_CONTATOS = "src/ArquivoContatos.dat", ARQUIVO_EVENTOS = "src/ArquivoEventos.dat";
+	final static String MENU_PRIMEIRO_USO = "O seu perfil ainda nao esta preenchido. Deseja preeche-lo agora? \n\n(1) SIM.\n(2) NAO.";
+
+	final static int SIM = 1, NAO = 2;
+
+	final static int EXIBIR_ATUALIZAR_PERFIL = 1, ADICIONAR_EVENTO = 2, ADICIONAR_CONTATO = 3, ADICIONAR_CONTATO_AEVENTOS = 4, ATUALIZAR_CONTATO = 5,
+			REMOVER_CONTATO = 6, BUSCAR_EVENTO_PORCONTATO = 7, EXIBIR_INFO_DECONTATO = 8, SAIR_DA_AGENDA = 9;
+
+	/**
+	 * Metodo main. Possui apenas chamadas de metodos statics de acordo com o utilidade desejada pelo usuario.
+	 * 
+	 * @param args
+	 * @throws Exception
+	 */
+	
+	public static void main(String[] args) throws Exception {
+
+		System.out.println(TITULO);
+		primeiroUso();
+		//Loop principal
+		while(true){    
+			Scanner sc = new Scanner(System.in);
+
+			int opcao = 0;
+
+			try {
+				do {
+					System.out.println(MENU_PRINCIPAL);
+					System.out.println("Opcao?");
+					opcao = sc.nextInt();
+				} while (! (ValidadorDeCampos.ehOpcaoValidaDoMenuPrincipal(opcao)));
+			}
+			catch (InputMismatchException e ) {
+				System.out.println("\nOPCAO INVALIDA.\n");
+			}
+
+			switch (opcao) {
+			case EXIBIR_ATUALIZAR_PERFIL:
+				exibirAtualizarPerfil();
+				break;
+			case ADICIONAR_EVENTO:
+				addEvento();
+				break;
+			case ADICIONAR_CONTATO:
+				addContato();
+				break;
+			case ADICIONAR_CONTATO_AEVENTOS:
+				addContatosAEventos();
+				break;
+			case ATUALIZAR_CONTATO:
+				atualizarContato();
+				break;
+			case REMOVER_CONTATO:
+				removerContatos();
+				break;
+			case BUSCAR_EVENTO_PORCONTATO:
+				buscaEventoPorContato();
+				break;
+			case EXIBIR_INFO_DECONTATO:
+				exibirInfoContato();
+				break;
+			case SAIR_DA_AGENDA:
+				System.out.println("Saindo da Agenda.");
+				System.exit(0);
+			}
+		}
+	}
+
+	/**
+	 * Metodo para verificar se um arquivo existe atraves do nome que eh passado como paramentro.
+	 * 
+	 * @param nomeDoArquivo
+	 * @return
+	 */
+	
+	// #################################### METODO isArquivoExistente() #############################################
+	public static boolean isArquivoExistente(String nomeDoArquivo) {
+		File arq = new File(nomeDoArquivo);
+		if (arq.exists())
+			return true;
+		return false;
+	}
+
+	/**
+	 * Primeiro metodo a  ser executado sempre que a agenda e iniciada. Verifica se o usuario ja existe. Se nao existe cadastra seus dados.
+	 * 
+	 * @throws IOException
+	 */
+	
+	// #################################### METODO primeiroUso() ####################################################
+	private static void primeiroUso() throws IOException {
+
+		PerfilUsuario perfil = null;
+		ControladorArquivos controladorArquivo = new ControladorArquivos();
+
+		if (isArquivoExistente(ARQUIVO_PERFIL)) {
+			perfil = (PerfilUsuario) controladorArquivo.leObjetoNoArquivo(ARQUIVO_PERFIL);
+			System.out.println("Seja bem vindo " + perfil.getNome() + "!\n");
+
+		} else {
+			Scanner sc = new Scanner(System.in);
+
+			int opcao = 0;
+
+			System.out.println(MENU_PRIMEIRO_USO);
+
+			try {
+				do {
+					System.out.println("Opcao?");
+					opcao = sc.nextInt();
+				} while (! (ValidadorDeCampos.ehUmOuDois(opcao)));
+			}
+			catch (InputMismatchException e ) {
+				System.out.println("\nOPCAO INVALIDA.\n");
+			}
+
+			switch (opcao) {
+
+			case SIM:
+
+				perfil = solicitaDadosDoPerfil();
+
+				controladorArquivo.escreveObjetoNoArquivo(ARQUIVO_PERFIL, perfil);
+
+				perfil = (PerfilUsuario) controladorArquivo.leObjetoNoArquivo(ARQUIVO_PERFIL);
+				System.out.println("\nDados de usuario atualizados.\n" + "\nSeja bem vindo " + perfil.getNome() + "!\n");
+				break;
+
+			case NAO:
+				System.out.println("Saindo da Agenda.");
+				System.exit(0);
+			}
+		}
+	} // fim de primeiroUso().
+
+	/**
+	 * Metodo que da ao usuario a opcao de exibir ou atualizar o seu perfil.
+	 * 
+	 * @throws IOException
+	 */
+	
+	// #################################### METODO exibirAtualizarPerfil() ##########################################
+	public static void exibirAtualizarPerfil() throws IOException {
+		final int EXIBIR = 1, ATUALIZAR = 2;
+
+		Scanner sc = new Scanner(System.in);
+		ControladorArquivos controladorArquivo = new ControladorArquivos();
+		PerfilUsuario perfil = (PerfilUsuario) controladorArquivo.leObjetoNoArquivo(ARQUIVO_PERFIL);
+
+		System.out.println("Exibir e atualizar perfil.\n\n(1) Exibir perfil\n(2) Atualizar perfil\n\nO que deseja?");
+
+		int opcao = 0;
+		try {
+			do {
+				System.out.println("Opcao?");
+				opcao = sc.nextInt();
+			} while (! (ValidadorDeCampos.ehUmOuDois(opcao)));
+		}
+		catch (InputMismatchException e ) {
+			System.out.println("\nOPCAO INVALIDA.\n");
+		}
+
+		switch (opcao) {
+		case EXIBIR:
+			System.out.println("Perfil do Usuario: \n");
+			System.out.println(perfil + "\n");
+			break;
+		case ATUALIZAR:
+			perfil = solicitaDadosDoPerfil();
+
+			controladorArquivo.escreveObjetoNoArquivo(ARQUIVO_PERFIL, perfil);
+
+			perfil = (PerfilUsuario) controladorArquivo.leObjetoNoArquivo(ARQUIVO_PERFIL);
+			System.out.println("\nDados de usuario atualizados.\n");
+
+			break;
+		default:
+			return;
+		}
+
+	} // fim de exibirAtualizarPerfil();
+
+	/**
+	 * Metodo que adiciona um evento no sistema.
+	 * 
+	 * @throws Exception
+	 */
+	
+	// #################################### METODO addEvento() ######################################################
+	public static void addEvento() throws Exception {
+		ControladorArquivos controlador = new ControladorArquivos();
+		CadastroDeEventos cadastroDeEventos;
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		Evento eventoAAdicionar;
+		
+		System.out.println("Adicionando novo evento\n");
+		
+		String nomeEvento;
+		do {
+			System.out.print("Nome: ");
+			nomeEvento = in.readLine();
+		} while (nomeEvento.isEmpty());
+		
+		String data;
+		do {
+			System.out.print("Data (no formato dd/mm/aaaa): ");
+			data = in.readLine();
+		} while (data.isEmpty() );
+		
+		String horario;
+		do {
+			System.out.print("Horario (no formato hh:mm:ss): ");
+			horario = in.readLine();
+		} while (horario.isEmpty());
+		
+		String duracao;
+		do {
+			System.out.print("Duracao (no formato hh:mm:ss): ");
+			duracao = in.readLine();
+		} while (duracao.isEmpty());
+		
+		System.out.print("Descricao: ");
+		String descricao = in.readLine();
+		
+		eventoAAdicionar = new Evento(nomeEvento, data, horario, duracao, descricao);
+		
+		if (! (isArquivoExistente(ARQUIVO_EVENTOS))) {
+			cadastroDeEventos = new CadastroDeEventos();
+			cadastroDeEventos.add(eventoAAdicionar);
+			controlador.escreveObjetoNoArquivo(ARQUIVO_CONTATOS, cadastroDeEventos);
+		}
+		else {
+			cadastroDeEventos = (CadastroDeEventos) controlador.leObjetoNoArquivo(ARQUIVO_EVENTOS);
+			List<Evento> eventosConflitantes = new ArrayList<Evento>();
+			Iterator<Evento> it = cadastroDeEventos.iterator();
+			while (it.hasNext()) {
+				Evento e = (Evento) it.next();
+				if (e.intercedeCom(eventoAAdicionar))
+					eventosConflitantes.add(e);
+			}
+			if (eventosConflitantes.isEmpty()) {
+				cadastroDeEventos.add(eventoAAdicionar);
+				controlador.escreveObjetoNoArquivo(ARQUIVO_CONTATOS, cadastroDeEventos);
+			}
+			else {
+				System.out.println("Esse(s) evento(s) esta(ao) agendado(s) para o mesmo horario.");
+				int i = 1;
+				for (Evento e : eventosConflitantes) {
+					System.out.println("\n(" + i + ")\n" + e.toString());
+					i++;
+				}
+				Scanner sc = new Scanner(System.in);
+				
+				int opcao = 0;
+				System.out.println("O que fezer?\n\n(1) Sobrepor todos\n(2) Adicionar junto");
+				try {
+					do {
+						System.out.println("Opcao?");
+						opcao = sc.nextInt();
+					} while (! (ValidadorDeCampos.ehUmOuDois(opcao)));
+				}
+				catch (InputMismatchException e ) {
+					System.out.println("\nOPCAO INVALIDA.\n");
+				}
+				
+				switch (opcao) {
+				case 1:
+					for (Evento evento : eventosConflitantes) {
+						cadastroDeEventos.remove(evento);
+					}
+					cadastroDeEventos.add(eventoAAdicionar);
+					controlador.escreveObjetoNoArquivo(ARQUIVO_EVENTOS, cadastroDeEventos);
+					System.out.println("\nEvento(s) antigo(s) removido(s) e o novo foi adicinado.\n");
+					break;
+				case 2:
+					cadastroDeEventos.add(eventoAAdicionar);
+					controlador.escreveObjetoNoArquivo(ARQUIVO_EVENTOS, cadastroDeEventos);
+					System.out.println("Novo evento adicionado.\n");
+					break;
+				}
+			}
+		}
+	} // fim de addEvento();
+
+	/**
+	 * 
+	 * Metodo para adicionar um contato no sistema.
+	 * 
+	 * 
+	 * @throws Exception
+	 */
+	
+	// #################################### METODO addContato() #####################################################     
+	public static void addContato() throws Exception {
+		ControladorArquivos controlador = new ControladorArquivos();
+		CadastroDeContatos cadastroDeContatos;
+
+		System.out.println("Adicionando novo contato\n");
+
+		Contato contato = solicitaDadosDoContato();
+
+		if (! (isArquivoExistente(ARQUIVO_CONTATOS))) {
+			cadastroDeContatos = new CadastroDeContatos();
+			cadastroDeContatos.add(contato);
+			controlador.escreveObjetoNoArquivo(ARQUIVO_CONTATOS, cadastroDeContatos);
+		}
+		else {
+			cadastroDeContatos = (CadastroDeContatos) controlador.leObjetoNoArquivo(ARQUIVO_CONTATOS);
+			cadastroDeContatos.add(contato);
+			controlador.escreveObjetoNoArquivo(ARQUIVO_CONTATOS, cadastroDeContatos);
+		}
+
+		System.out.println("\nNovo contato adicionado.\n");
+
+	} // fim de addContato
+
+	/**
+	 * Metodo que permite ao usuario atualizar ou nao as informacoes de um contatol.
+	 * 
+	 * @throws Exception
+	 */
+	
+	// #################################### METODO atualizarContato() ###############################################
+	public static void atualizarContato() throws Exception {
+		if (! (isArquivoExistente(ARQUIVO_CONTATOS))) {
+			System.out.println("Operacao invalida. Voce nao adicionou nenhum contato ainda.\n");
+			return;
+		}
+
+		ControladorArquivos controlador = new ControladorArquivos();
+		CadastroDeContatos cadastroDeContatos = (CadastroDeContatos) controlador.leObjetoNoArquivo(ARQUIVO_CONTATOS);
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+
+		System.out.println("Atualizar contato\n");
+		System.out.println("Digite o nome do contato.");
+		System.out.print("Nome: ");
+		String nomeContato = in.readLine();
+
+		Contato contato = cadastroDeContatos.pesquisaContato(nomeContato);
+		if (contato == null) {
+			System.out.println("\nNenhum contato corresponde a busca.\n");
+			return;
+		}
+		else {
+			System.out.println(contato);
+
+			Scanner sc = new Scanner(System.in);
+			System.out.println("\nDeseja realmente modificar esse contato?\n\n(1) Sim\n(2) NAO");
+
+			int opcao = 0;
+			try {
+				do {
+					System.out.println("Opcao?");
+					opcao = sc.nextInt();
+				} while (! (ValidadorDeCampos.ehUmOuDois(opcao)));
+			}
+			catch (InputMismatchException e ) {
+				System.out.println("\nOPCAO INVALIDA.\n");
+			}
+
+			switch (opcao) {
+			case NAO:
+				System.out.println("Contato nao foi alterado.\n");
+				return;
+			case SIM:
+				cadastroDeContatos.remove(contato);
+
+				System.out.println("Alterar nome de " + contato.getNome() + "?\n\n(1) SIM\n(2)NAO");
+
+				int opcao2 = 0;
+				try {
+					do {
+						System.out.println("Opcao?");
+						opcao2 = sc.nextInt();
+					} while (! (ValidadorDeCampos.ehUmOuDois(opcao2)));
+				}
+				catch (InputMismatchException e ) {
+					System.out.println("\nOPCAO INVALIDA.\n");
+				}
+
+				switch (opcao2) {
+				case NAO:
+					System.out.println("\nO nome nao foi alterado.\n");
+					break;
+				case SIM:
+					System.out.print("Digite o novo nome: ");
+					String novoNome = in.readLine();
+					while (novoNome.isEmpty()) {
+						System.out.println("Nome invalido. Digite um nome.");
+						System.out.print("Digite o novo nome: ");
+						novoNome = in.readLine();
+					}
+					contato.setNome(novoNome);
+					break;
+				}
+
+				System.out.println("Alterar Endereco de " + contato.getNome() + "?\n\n(1) SIM\n(2) NAO");
+
+				int opcao3 = 0;
+				try {
+					do {
+						System.out.println("Opcao?");
+						opcao3 = sc.nextInt();
+					} while (! (ValidadorDeCampos.ehUmOuDois(opcao3)));
+				}
+				catch (InputMismatchException e ) {
+					System.out.println("\nOPCAO INVALIDA.\n");
+				}
+
+				switch (opcao3) {
+				case NAO:
+					System.out.println("\nEndereco não foi alterado.\n");
+					break;
+				case SIM:
+					System.out.println("Endereco");
+					Endereco novoEndereco;
+					System.out.print("Largadouro (rua, avenida, etc): ");
+					String lagradouro = in.readLine();
+					System.out.print("Bairro: ");
+					String bairro = in.readLine();
+					System.out.print("Cidade/UF: ");
+					String cidEstado = in.readLine();
+					System.out.print("CEP: ");
+					String cep = in.readLine();
+					System.out.print("Numero: ");
+					String num = in.readLine();
+					novoEndereco = new Endereco(lagradouro, bairro, cidEstado, cep, num);
+
+					contato.setEndereco(novoEndereco);
+				}
+
+				System.out.println("Alterar formas de contato de " + contato.getNome() + "?\n\n(1) SIM\n(2) NAO");
+
+				int opcao4 = 0;
+				try {
+					do {
+						System.out.println("Opcao?");
+						opcao4 = sc.nextInt();
+					} while (! (ValidadorDeCampos.ehUmOuDois(opcao4)));
+				}
+				catch (InputMismatchException e ) {
+					System.out.println("\nOPCAO INVALIDA.\n");
+				}
+
+				switch (opcao4) {
+				case NAO:
+					System.out.println("Formas de contato");
+					Iterator<FormaDeContato> it = contato.getFormasDeContato().iterator();
+					int  i = 0;
+					while (it.hasNext()) {
+						FormaDeContato f = (FormaDeContato) it.next();
+						i++;
+						System.out.println("(" + i + ") " + f.toString());
+						System.out.println("Formas de cantato não foram alteradas.\n");
+					}
+					break;
+				case SIM:
+					List<FormaDeContato> formasDeContato = new ArrayList<FormaDeContato>();
+					while (true) {
+						System.out.println("\nAlterando formas de contato (cadastre pelo menos uma): ");
+						System.out.println("\nAdicionar telefone residencial?\n\n(1)SIM\n(2)NAO");
+
+						int opcao5 = 0;
+						try {
+							do {
+								System.out.println("Opcao?");
+								opcao5 = sc.nextInt();
+							} while (! (ValidadorDeCampos.ehUmOuDois(opcao5)));
+						}
+						catch (InputMismatchException e ) {
+							System.out.println("\nOPCAO INVALIDA.\n");
+						}
+
+						while (opcao5 != NAO) {
+							System.out.print("Residencial: ");
+							int numResidencial = sc.nextInt();
+							TelefoneResidencial telResidencial = new TelefoneResidencial(numResidencial);
+
+							formasDeContato.add(telResidencial);
+							System.out.println("Adicionar outro telefone residencial?\n\n(1)SIM\n(2)NAO");
+							opcao5 = sc.nextInt();
+						}
+
+						System.out.println("Adicionar telefone celular?\n\n(1)SIM\n(2)NAO");
+
+						int opcao6 = 0;
+						try {
+							do {
+								System.out.println("Opcao?");
+								opcao6 = sc.nextInt();
+							} while (! (ValidadorDeCampos.ehUmOuDois(opcao6)));
+						}
+						catch (InputMismatchException e ) {
+							System.out.println("\nOPCAO INVALIDA.\n");
+						}
+
+						while (opcao6 != NAO) {
+							System.out.print("Celular: ");
+							int numCelular = sc.nextInt();
+							TelefoneCelular telCelular = new TelefoneCelular(numCelular);
+
+							formasDeContato.add(telCelular);
+							System.out.println("Adicionar outro telefone celular?\n\n(1)SIM\n(2)NAO");
+							opcao6 = sc.nextInt();
+						}
+
+						System.out.println("Adicionar e-mail \n\n(1)SIM\n(2)NAO");
+
+						int opcao7 = 0;
+						try {
+							do {
+								System.out.println("Opcao?");
+								opcao7 = sc.nextInt();
+							} while (! (ValidadorDeCampos.ehUmOuDois(opcao7)));
+						}
+						catch (InputMismatchException e ) {
+							System.out.println("\nOPCAO INVALIDA.\n");
+						}
+
+						while (opcao7 != NAO) {
+							System.out.print("Email (ex.: nome@algumacoisa.com ou nome@algumacoisa.com.br): ");
+							String enderecoEmail;
+							enderecoEmail = in.readLine();
+							Email email = null;
+							try {
+								email = new Email(enderecoEmail);
+								formasDeContato.add(email);
+							} catch (Exception e) {
+								System.out.println("O e-mail digitado foi invalido.");
+							}
+
+							System.out.println("Adicionar outro email?\n\n(1)SIM\n(2)NAO");
+							opcao7 = sc.nextInt();
+						}
+
+						if (formasDeContato.isEmpty())
+							System.out.println("Eh obrigatoriao cadastrar pelo menos uma forma de contato.\n");
+						else
+							break;
+					}
+					contato.setFormasDeContato(formasDeContato);
+					System.out.println("\nAs formas de contato foram atualizadas.\n");
+				}
+
+				System.out.println("Alterar data de aniversario/nascimento de " + contato.getNome() + "\nData: " + contato.getAniversario() + "?\n\n(1) SIM\n(2)NAO");
+
+				int opcao8 = 0;
+				try {
+					do {
+						System.out.println("Opcao?");
+						opcao8 = sc.nextInt();
+					} while (! (ValidadorDeCampos.ehUmOuDois(opcao8)));
+				}
+				catch (InputMismatchException e ) {
+					System.out.println("\nOPCAO INVALIDA.\n");
+				}
+
+				switch (opcao) {
+				case NAO:
+					System.out.println("Data de aniversario/nascimento nao foi alterada.");
+					break;
+				case SIM:
+					String dia;
+					System.out.print("Dia: ");
+					dia = in.readLine();
+					while (dia.length() != 2 || dia.isEmpty() || (!dia.matches("^[0-9]*$"))) {
+						System.out.println("Dia invalido.");
+						System.out.print("Dia: ");
+						dia = in.readLine();
+					}
+
+					String mes;
+					System.out.print("Mes: ");
+					mes = in.readLine();
+					while (mes.length() != 2 || mes.isEmpty() || (!mes.matches("^[0-9]*$"))) {
+						System.out.println("Mes invalido.");
+						System.out.print("Mes: ");
+						mes = in.readLine();
+					}
+
+					String ano;
+					System.out.print("Ano: ");
+					ano = in.readLine();
+					while (ano.length() != 4 || ano.isEmpty() || (!ano.matches("^[0-9]*$"))) {
+						System.out.println("Ano invalido.");
+						System.out.print("Ano: ");
+						ano = in.readLine();
+					}
+
+					String data = dia + "-" + mes + "-" + ano;
+					contato.setAniversario(data);
+
+					System.out.println("\nData alterada.\n");
+
+				}
+				System.out.println("Alterar comentario?\n\n(1) SIM\n(2) NAO");
+
+				int opcao9 = 0;
+				try {
+					do {
+						System.out.println("Opcao?");
+						opcao9 = sc.nextInt();
+					} while (! (ValidadorDeCampos.ehUmOuDois(opcao9)));
+				}
+				catch (InputMismatchException e ) {
+					System.out.println("\nOPCAO INVALIDA.\n");
+				}
+
+				switch (opcao9) {
+				case NAO:
+					System.out.println("\nO comentario nao foi alterado.\n");
+					break;
+				case SIM:
+					System.out.print("Digite o comentario: ");
+					String comentario = in.readLine();
+
+					contato.setComentario(comentario);
+					System.out.println("O comentario foi atualizado.\n");
+				}
+			}
+
+			cadastroDeContatos.add(contato);
+			controlador.escreveObjetoNoArquivo(ARQUIVO_CONTATOS, cadastroDeContatos);
+			System.out.println("As informacoes do contato foram atualizadas.\n");
+		}
+	} // fim de atualizarContato();
+
+	/**
+	 * Metodo que recebe os dados do usuario e retorna um objeto PerfilUsuario instanciado pelos dados recebidos.
+	 * 
+	 * @return
+	 * @throws IOException
+	 */
+	
+	// #################################### METODO solicitaDadosDoPerfil() ##########################################
+	public static PerfilUsuario solicitaDadosDoPerfil() throws IOException {
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+
+		PerfilUsuario perfil;
+		System.out.println("Perfil do Usuario\n");
+		System.out.print("Digite seu nome: ");
+		String nome = in.readLine();
+		System.out.print("Digite seu email: ");
+		String email = in.readLine();
+		System.out.print("Digite uma descricao para o Perfil: ");
+		String descricao = in.readLine();
+
+		perfil = new PerfilUsuario(nome, email, descricao);
+		return perfil;
+	}
+
+	/**
+	 * Metodo que recebe os dados de um contato e retorna um objeto Contato instanciado pelos dados recebidos.
+	 * 
+	 * @return
+	 * @throws IOException
+	 * @throws Exception
+	 */
+	
+	// #################################### METODO solicitaDadosDoContato() #########################################
+	public static Contato solicitaDadosDoContato()
+			throws IOException, Exception {
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		Scanner sc = new Scanner(System.in);
+		List<FormaDeContato> formasDeContato = new ArrayList<FormaDeContato>();
+
+		// Nome do contato.
+		System.out.print("Nome: ");
+		String nomeContato = in.readLine();
+
+		// Endereco do contato.
+		System.out.println("Endereco");
+		Endereco endereco;
+		System.out.print("Largadouro (rua, avenida, etc): ");
+		String lagr = in.readLine();
+		System.out.print("Bairro: ");
+		String bairro = in.readLine();
+		System.out.print("Cidade/UF: ");
+		String cidEstado = in.readLine();
+		System.out.print("CEP: ");
+		String cep = in.readLine();
+		System.out.print("Numero: ");
+		String num = in.readLine();
+		endereco = new Endereco(lagr, bairro, cidEstado, cep, num);
+
+		// Formas de contato.
+
+		while (true) {
+			System.out.println("\nFormas de contato (cadastre pelo menos uma): ");
+			System.out.println("\nAdicionar telefone residencial?\n\n(1)SIM\n(2)NAO");
+
+			int opcao = 0;
+			try {
+				do {
+					System.out.println("Opcao?");
+					opcao = sc.nextInt();
+				} while (! (ValidadorDeCampos.ehUmOuDois(opcao)));
+			}
+			catch (InputMismatchException e ) {
+				System.out.println("\nOPCAO INVALIDA.\n");
+			}
+
+			while (opcao != NAO) {
+				System.out.print("Residencial: ");
+				int numResidencial = sc.nextInt();
+				TelefoneResidencial telResidencial = new TelefoneResidencial(numResidencial);
+
+				formasDeContato.add(telResidencial);
+				System.out.println("Adicionar outro telefone residencial?\n\n(1)SIM\n(2)NAO");
+				opcao = sc.nextInt();
+			}
+
+			System.out.println("Adicionar telefone celular?\n\n(1)SIM\n(2)NAO");
+
+			int opcao2 = 0;
+			try {
+				do {
+					System.out.println("Opcao?");
+					opcao2 = sc.nextInt();
+				} while (! (ValidadorDeCampos.ehUmOuDois(opcao2)));
+			}
+			catch (InputMismatchException e ) {
+				System.out.println("\nOPCAO INVALIDA.\n");
+			}
+
+			while (opcao2 != NAO) {
+				System.out.print("Celular: ");
+				int numCelular = sc.nextInt();
+				TelefoneCelular telCelular = new TelefoneCelular(numCelular);
+
+				formasDeContato.add(telCelular);
+				System.out.println("Adicionar outro telefone celular?\n\n(1)SIM\n(2)NAO");
+				opcao2 = sc.nextInt();
+			}
+
+			System.out.println("Adicionar e-mail \n\n(1)SIM\n(2)NAO");
+
+			int opcao3 = 0;
+			try {
+				do {
+					System.out.println("Opcao?");
+					opcao3 = sc.nextInt();
+				} while (! (ValidadorDeCampos.ehUmOuDois(opcao3)));
+			}
+			catch (InputMismatchException e ) {
+				System.out.println("\nOPCAO INVALIDA.\n");
+			}
+
+			while (opcao3 != NAO) {
+				System.out.print("Email (ex.: nome@algumacoisa.com ou nome@algumacoisa.com.br): ");
+				String enderecoEmail;
+				enderecoEmail = in.readLine();
+				Email email = null;
+				try {
+					email = new Email(enderecoEmail);
+					formasDeContato.add(email);
+				} catch (Exception e) {
+					System.out.println("O e-mail digitado foi invalido.");
+				}
+
+				System.out.println("Adicionar outro email?\n\n(1)SIM\n(2)NAO");
+				opcao3 = sc.nextInt();
+			}
+
+			if (formasDeContato.isEmpty())
+				System.out.println("Eh obrigatoriao cadastrar pelo menos uma forma de contato.\n");
+			else
+				break;
+		}
+
+		System.out.println("Data de aniversario/nascimento");
+
+		String dia;
+		System.out.print("Dia: ");
+		dia = in.readLine();
+		while (dia.length() != 2 || dia.isEmpty() || (!dia.matches("^[0-9]*$"))) {
+			System.out.println("Dia invalido.");
+			System.out.print("Dia: ");
+			dia = in.readLine();
+		}
+
+		String mes;
+		System.out.print("Mes: ");
+		mes = in.readLine();
+		while (mes.length() != 2 || mes.isEmpty() || (!mes.matches("^[0-9]*$"))) {
+			System.out.println("Mes invalido.");
+			System.out.print("Mes: ");
+			mes = in.readLine();
+		}
+
+		String ano;
+		System.out.print("Ano: ");
+		ano = in.readLine();
+		while (ano.length() != 4 || ano.isEmpty() || (!ano.matches("^[0-9]*$"))) {
+			System.out.println("Ano invalido.");
+			System.out.print("Ano: ");
+			ano = in.readLine();
+		}
+
+		String data = dia + "-" + mes + "-" + ano;
+
+		System.out.println("Comentario");
+		System.out.print("Escreva um comentario: ");
+		String comentario = in.readLine();
+
+		Contato contato = new Contato(nomeContato, endereco, data, formasDeContato, comentario);
+		return contato;
+	}
+
+	/**
+	 * Adiciona um contato a um evento, ambos informados pelo usuario.
+	 * 
+	 * @throws IOException
+	 */
+	
+	// ##################################### METODO addContatosAEventos() ###########################################
+	public static void addContatosAEventos() throws IOException {
+		if (! (isArquivoExistente(ARQUIVO_EVENTOS))) {
+			System.out.println("Operacao invalida. Voce nao adicionou nenhum contato ainda.\n");
+			return;
+		}
+		
+		ControladorArquivos controlador = new ControladorArquivos();
+		CadastroDeEventos cadastroDeEventos = (CadastroDeEventos) controlador.leObjetoNoArquivo(ARQUIVO_EVENTOS);
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		
+		System.out.println("Adicionar um contato a um evento\n.");
+		System.out.println("Digite o nome de um evento.");
+		System.out.print("Nome: ");
+		String nome = in.readLine();
+		
+		Evento evento = cadastroDeEventos.pesquisaEvento(nome);
+		if (evento == null) {
+			System.out.println("Nenhum evento corresponde a busca.\n");
+		}
+		else {
+			cadastroDeEventos.remove(evento);
+			System.out.println(evento + "\n");
+			System.out.println("Digite o nome do contato que deseja adicionar a este evento");
+			System.out.print("Nome do contato: ");
+						
+			CadastroDeContatos cadastroDeContatos = (CadastroDeContatos) controlador.leObjetoNoArquivo(ARQUIVO_CONTATOS);
+			String nomeContato = in.readLine();
+			Contato contato = cadastroDeContatos.pesquisaContato(nomeContato);
+			
+			if (contato == null) {
+				System.out.println("Voce nao possui esse contato em sua lista.");
+				return;
+			}
+			else {
+				evento.adicionaContato(contato);
+				cadastroDeEventos.add(evento);
+				controlador.escreveObjetoNoArquivo(ARQUIVO_EVENTOS, cadastroDeEventos);
+				System.out.println("O contato foi adicionado ao evento " + evento.getNome() + ".");
+				
+			}
+			
+		}
+
+	} //fim de addContatosAEventos();
+
+	/**
+	 * Permite um usuari remover um contato do sistema.
+	 * 
+	 * @throws IOException
+	 */
+	
+	// ##################################### METODO removerContatos() ###############################################
+	public static void removerContatos() throws IOException {
+		if (! (isArquivoExistente(ARQUIVO_CONTATOS))) {
+			System.out.println("Operacao invalida. Voce nao tem nenhum contato ainda.\n");
+			return;
+		}
+
+		ControladorArquivos controlador = new ControladorArquivos();
+		CadastroDeContatos cadastroDeContatos = (CadastroDeContatos) controlador.leObjetoNoArquivo(ARQUIVO_CONTATOS);
+
+		if (cadastroDeContatos.numeroContatos() == 0) {
+			System.out.println("Operacao invalida. Voce nao tem nenhum contato ainda.\n");
+			return;
+		}
+
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+
+		System.out.println("Remover contato\n");
+		System.out.println("Digite o nome do contato.");
+		System.out.print("Nome: ");
+		String nomeContato = in.readLine();
+
+		List<Contato> contatos = cadastroDeContatos.pesquisaContatos(nomeContato);
+		if (contatos.isEmpty()) {
+			System.out.println("\nNenhum contato corresponde a busca.\n");
+			return;
+		}
+		else {
+			int opcao = -1;
+
+			System.out.println("Resultados da busca:");
+			int i = 1;
+			for (Contato c : contatos) {
+				System.out.println("\n(" + i + ")\n" + c.toString());
+				i++;
+			}
+			Scanner sc = new Scanner(System.in);
+
+			System.out.println("\nDigite o numero de qual deseja remover:");
+			try {
+				do {
+					opcao = sc.nextInt();
+				}while (! (opcao >= 0 && opcao <= contatos.size()));
+			}
+			catch (InputMismatchException e) {
+				System.out.println("\nOPCAO INVALIDA.\n");
+			}
+
+			Contato contatoARemover = contatos.remove(opcao - 1);
+			cadastroDeContatos.remove(contatoARemover);
+			System.out.println("Contato removido.\n");
+
+			controlador.escreveObjetoNoArquivo(ARQUIVO_CONTATOS, cadastroDeContatos);
+		}
+	}
+
+	/**
+	 * Metodo que imprime as informacoes de um contato solicitado pelo usuario.
+	 * 
+	 * @throws IOException
+	 */
+	
+	// ##################################### METODO exibirInfoContato() #############################################
+	public static void exibirInfoContato() throws IOException {
+		if (! (isArquivoExistente(ARQUIVO_CONTATOS))) {
+			System.out.println("Operacao invalida. Voce nao tem nenhum contato ainda.\n");
+			return;
+		}
+
+		ControladorArquivos controlador = new ControladorArquivos();
+		CadastroDeContatos cadastroDeContatos = (CadastroDeContatos) controlador.leObjetoNoArquivo(ARQUIVO_CONTATOS);
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+
+		System.out.println("Exibir informacoes de contato\n");
+		System.out.println("Digite o nome do contato.");
+		System.out.print("Nome: ");
+		String nomeContato = in.readLine();
+
+		Contato contato = cadastroDeContatos.pesquisaContato(nomeContato);
+		if (contato == null) {
+			System.out.println("\nNenhum contato corresponde a busca.\n");
+			return;
+		}
+		else {
+			System.out.println("\n" + contato + "\n");
+		}
+	}
+	
+	/**
+	 * Busca eventos por um contato perticipante do mesmo.
+	 * 
+	 * @throws IOException
+	 */
+	
+	// ##################################### METODO buscaEventoPorContato() #########################################
+	public static void buscaEventoPorContato() throws IOException {
+		if ((!isArquivoExistente(ARQUIVO_EVENTOS)) || (!isArquivoExistente(ARQUIVO_CONTATOS))) {
+			System.out.println("Operacao invalida. Voce nao adicionou nenhum evento ou nenhum contato ainda.\n");
+			return;
+		}
+		
+		ControladorArquivos controlador = new ControladorArquivos();
+		CadastroDeEventos cadastroDeEventos = (CadastroDeEventos) controlador.leObjetoNoArquivo(ARQUIVO_EVENTOS);
+		CadastroDeContatos cadastroDeContatos = (CadastroDeContatos) controlador.leObjetoNoArquivo(ARQUIVO_CONTATOS);
+		
+		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
+		System.out.println("Buscar eventos por contato participante");
+		System.out.print("Nome do contato: ");
+		String nomeContato = in.readLine();
+		
+		Contato contato = cadastroDeContatos.pesquisaContato(nomeContato);
+		if (contato == null) {
+			System.out.println("Este contato nao existe na sua lista.");
+			return;
+		}
+		else {
+			List<Evento> eventos = cadastroDeEventos.pesquisaEventosPorContato(contato);
+			System.out.println(contato.getNome() + " participara de:");
+			for (Evento evento : eventos) {
+				System.out.println(evento.getNome() + " em " + evento.getData() + " as " + evento.getHora() + ".");
+			}
+		}
+	}
+}

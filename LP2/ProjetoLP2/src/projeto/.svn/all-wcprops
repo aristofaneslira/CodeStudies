@@ -1,0 +1,245 @@
+K 25
+svn:wc:ra_dav:version-url
+V 46
+/svn/!svn/ver/263/trunk/ProjetoLP2/src/projeto
+END
+TestaEmail.java
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/237/trunk/ProjetoLP2/src/projeto/TestaEmail.java
+END
+TelefoneInvalidoException.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/svn/!svn/ver/201/trunk/ProjetoLP2/src/projeto/TelefoneInvalidoException.java
+END
+Telefone.java
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/200/trunk/ProjetoLP2/src/projeto/Telefone.java
+END
+Contato.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/238/trunk/ProjetoLP2/src/projeto/Contato.java
+END
+ModificarPerfilUI.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/260/trunk/ProjetoLP2/src/projeto/ModificarPerfilUI.java
+END
+Endereco.java
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/svn/!svn/ver/211/trunk/ProjetoLP2/src/projeto/Endereco.java
+END
+ExibirModificarContatoUI.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/svn/!svn/ver/257/trunk/ProjetoLP2/src/projeto/ExibirModificarContatoUI.java
+END
+ValidadorDeCampos.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/257/trunk/ProjetoLP2/src/projeto/ValidadorDeCampos.java
+END
+Images-icon.png
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/229/trunk/ProjetoLP2/src/projeto/Images-icon.png
+END
+DesejaAtualizarPerfilUI.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/257/trunk/ProjetoLP2/src/projeto/DesejaAtualizarPerfilUI.java
+END
+AbrindoMidia.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/232/trunk/ProjetoLP2/src/projeto/AbrindoMidia.java
+END
+Erro2UI.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/257/trunk/ProjetoLP2/src/projeto/Erro2UI.java
+END
+Email.java
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/264/trunk/ProjetoLP2/src/projeto/Email.java
+END
+TestaAgenda.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/205/trunk/ProjetoLP2/src/projeto/TestaAgenda.java
+END
+InterfaceTeste.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/190/trunk/ProjetoLP2/src/projeto/InterfaceTeste.java
+END
+Main.java
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/svn/!svn/ver/233/trunk/ProjetoLP2/src/projeto/Main.java
+END
+AddAnotacaoUI.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/257/trunk/ProjetoLP2/src/projeto/AddAnotacaoUI.java
+END
+Audio.java
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/245/trunk/ProjetoLP2/src/projeto/Audio.java
+END
+music-icon.png
+K 25
+svn:wc:ra_dav:version-url
+V 61
+/svn/!svn/ver/230/trunk/ProjetoLP2/src/projeto/music-icon.png
+END
+TestaPerfilUsuario.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/168/trunk/ProjetoLP2/src/projeto/TestaPerfilUsuario.java
+END
+Document-Text-icon.png
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/228/trunk/ProjetoLP2/src/projeto/Document-Text-icon.png
+END
+AgendaMultitudoUI.java
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/svn/!svn/ver/262/trunk/ProjetoLP2/src/projeto/AgendaMultitudoUI.java
+END
+Agenda.java
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/261/trunk/ProjetoLP2/src/projeto/Agenda.java
+END
+FormaDeContato.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/svn/!svn/ver/208/trunk/ProjetoLP2/src/projeto/FormaDeContato.java
+END
+ControladorArquivos.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/svn/!svn/ver/20/trunk/ProjetoLP2/src/projeto/ControladorArquivos.java
+END
+TestaEvento.java
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/svn/!svn/ver/235/trunk/ProjetoLP2/src/projeto/TestaEvento.java
+END
+PerfilUsuario.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/257/trunk/ProjetoLP2/src/projeto/PerfilUsuario.java
+END
+SelecionarArquivoUI.java
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/svn/!svn/ver/257/trunk/ProjetoLP2/src/projeto/SelecionarArquivoUI.java
+END
+ErroUI.java
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/258/trunk/ProjetoLP2/src/projeto/ErroUI.java
+END
+NomeInvalidoException.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/svn/!svn/ver/197/trunk/ProjetoLP2/src/projeto/NomeInvalidoException.java
+END
+ExibirModificarEventoUI.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/svn/!svn/ver/262/trunk/ProjetoLP2/src/projeto/ExibirModificarEventoUI.java
+END
+Erro3UI.java
+K 25
+svn:wc:ra_dav:version-url
+V 59
+/svn/!svn/ver/263/trunk/ProjetoLP2/src/projeto/Erro3UI.java
+END
+TocarAudio.java
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/svn/!svn/ver/250/trunk/ProjetoLP2/src/projeto/TocarAudio.java
+END
+EmailInvalidoException.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/!svn/ver/196/trunk/ProjetoLP2/src/projeto/EmailInvalidoException.java
+END
+TestaContato.java
+K 25
+svn:wc:ra_dav:version-url
+V 64
+/svn/!svn/ver/185/trunk/ProjetoLP2/src/projeto/TestaContato.java
+END
+TestaTelefone.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/184/trunk/ProjetoLP2/src/projeto/TestaTelefone.java
+END
+Main2.java
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/svn/!svn/ver/260/trunk/ProjetoLP2/src/projeto/Main2.java
+END
+AgendaMultitudo.java
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/svn/!svn/ver/175/trunk/ProjetoLP2/src/projeto/AgendaMultitudo.java
+END
+TestaEndereco.java
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/svn/!svn/ver/114/trunk/ProjetoLP2/src/projeto/TestaEndereco.java
+END
+Evento.java
+K 25
+svn:wc:ra_dav:version-url
+V 58
+/svn/!svn/ver/252/trunk/ProjetoLP2/src/projeto/Evento.java
+END

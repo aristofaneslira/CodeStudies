@@ -1,0 +1,30 @@
+#program exec=0|1
+get
+get_lockall_epoch
+put
+put_lockall_epoch
+acc
+acc_lockall_epoch
+acc_flush_local
+acclock
+getacc
+getacc_lockall_epoch
+subcomm
+self_acclock
+no_loadstore
+no_check
+no_accumulate_ordering
+acc_pscw
+put_fence
+acc_get_fence
+fetch_and_op
+win_allocate
+win_create_acc
+epoch_type
+win_allocate_info
+win_errhan
+comm_errhan
+finalize
+thread_acc_flush exec=@CTEST_ENABLE_THREAD_TEST@
+thread_acc_lock exec=@CTEST_ENABLE_THREAD_TEST@
+thread_multiwins exec=@CTEST_ENABLE_THREAD_TEST@

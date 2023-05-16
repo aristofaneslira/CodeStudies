@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="400.0" prefWidth="620.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="uepb.view.controller.TelaController">
+<center><TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+  <tabs>
+    <Tab text="Parte 1">
+<content><BorderPane>
+<top><ToolBar BorderPane.alignment="CENTER">
+  <items><ToggleButton fx:id="toggleButtonCarregarGrama" mnemonicParsing="false" prefHeight="100.0" prefWidth="200.0" text="Carregar Grama">
+<graphic><ImageView fx:id="imageViewCarregarGrama" fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" />
+</graphic></ToggleButton>
+<ToggleButton fx:id="toggleButtonCarregarCeu" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="200.0" text="Carregar Céu">
+<graphic><ImageView fx:id="imageViewCarregarCeu" fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" />
+</graphic>
+</ToggleButton>
+<ToggleButton fx:id="toggleButtonCarregarCeuEGrama" layoutX="159.0" layoutY="10.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="200.0" text="Carregar Grama/Céu" wrapText="true">
+<graphic><ImageView fx:id="imageViewCarregarCeuEGrama" fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" />
+</graphic>
+</ToggleButton>
+  </items>
+</ToolBar>
+</top>
+<center>
+<HBox spacing="50.0">
+<children>
+<VBox alignment="CENTER" spacing="5.0">
+<children><Label text="Y" /><GridPane gridLinesVisible="true">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints vgrow="SOMETIMES" />
+  </rowConstraints>
+<children><Pane fx:id="paneY" prefHeight="220.0" prefWidth="220.0" />
+</children>
+</GridPane>
+</children>
+</VBox>
+<VBox alignment="CENTER" spacing="5.0">
+<children><Label text="U" />
+<GridPane gridLinesVisible="true" layoutX="10.0" layoutY="10.0">
+<children>
+<Pane fx:id="paneU" prefHeight="110.0" prefWidth="110.0" />
+</children>
+<columnConstraints>
+<ColumnConstraints hgrow="SOMETIMES" />
+</columnConstraints>
+<rowConstraints>
+<RowConstraints vgrow="SOMETIMES" />
+</rowConstraints>
+</GridPane>
+</children>
+</VBox>
+<VBox alignment="CENTER" spacing="5.0">
+<children><Label text="V" />
+<GridPane gridLinesVisible="true" layoutX="10.0" layoutY="10.0">
+<children>
+<Pane fx:id="paneV" prefHeight="110.0" prefWidth="110.0" />
+</children>
+<columnConstraints>
+<ColumnConstraints hgrow="SOMETIMES" />
+</columnConstraints>
+<rowConstraints>
+<RowConstraints vgrow="SOMETIMES" />
+</rowConstraints>
+</GridPane>
+</children>
+</VBox>
+</children>
+<BorderPane.margin>
+<Insets left="38.0" />
+</BorderPane.margin>
+</HBox>
+</center></BorderPane>
+</content>
+    </Tab>
+    <Tab text="Parte 2">
+<content><BorderPane>
+<top><ToolBar BorderPane.alignment="CENTER">
+<items><ToggleButton fx:id="toggleButtonDCTGrama" mnemonicParsing="false" prefHeight="100.0" prefWidth="200.0" text="DCT Grama">
+<graphic><ImageView fx:id="imageViewDCTGrama" fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" />
+</graphic></ToggleButton><ToggleButton fx:id="toggleButtonDCTCeu" mnemonicParsing="false" prefHeight="100.0" prefWidth="200.0" text="DCT Céu">
+<graphic><ImageView fx:id="imageViewDCTCeu" fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" />
+</graphic></ToggleButton><ToggleButton fx:id="toggleButtonDCTCeuEGrama" mnemonicParsing="false" prefHeight="100.0" prefWidth="200.0" text="DCT Grama/Céu">
+<graphic><ImageView fx:id="imageViewDCTCeuEGrama" fitHeight="70.0" fitWidth="70.0" pickOnBounds="true" preserveRatio="true" />
+</graphic></ToggleButton>
+</items>
+</ToolBar>
+</top>
+<center><HBox spacing="50.0" BorderPane.alignment="CENTER">
+<children><VBox alignment="CENTER" spacing="10.0">
+<children><Label text="Matriz" />
+<GridPane gridLinesVisible="true">
+<columnConstraints>
+<ColumnConstraints hgrow="SOMETIMES" />
+</columnConstraints>
+<rowConstraints>
+<RowConstraints vgrow="SOMETIMES" />
+</rowConstraints>
+<children><Pane fx:id="paneMatriz" prefHeight="180.0" prefWidth="300.0" />
+</children>
+</GridPane><GridPane hgap="10.0">
+  <columnConstraints>
+    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" />
+    <ColumnConstraints hgrow="SOMETIMES" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints vgrow="SOMETIMES" />
+  </rowConstraints>
+<children><Label text="Zeros:" /><TextField fx:id="textFieldZeros" editable="false" GridPane.columnIndex="1" />
+</children>
+</GridPane>
+</children></VBox><VBox alignment="CENTER" spacing="10.0">
+<children><Label text="Gráfico" />
+<GridPane gridLinesVisible="true">
+<columnConstraints>
+<ColumnConstraints hgrow="SOMETIMES" />
+</columnConstraints>
+<rowConstraints>
+<RowConstraints vgrow="SOMETIMES" />
+</rowConstraints>
+<children><Pane fx:id="paneGrafico" prefHeight="200.0" prefWidth="200.0" />
+</children>
+</GridPane>
+</children></VBox>
+</children>
+<padding>
+<Insets left="35.0" />
+</padding></HBox>
+</center></BorderPane>
+</content></Tab>
+  </tabs>
+</TabPane>
+</center></BorderPane>
