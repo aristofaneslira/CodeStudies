@@ -1,0 +1,3 @@
+Entrar na pasta e executar o comando:
+
+java -jar CG-TRANS3D.jar
