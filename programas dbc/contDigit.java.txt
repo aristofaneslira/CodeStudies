@@ -1,0 +1,30 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+class Main {
+    public static void main(String args[]) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String inputFromQuestion = br.readLine();
+        int n = Integer.parseInt(inputFromQuestion);
+
+        
+        int count_of_one = countDigit(n);
+        System.out.println("count_of_one = " + count_of_one);
+    }
+
+    public static int countDigit(int n) {
+        int count = 0;
+        for (int i = 0; i <= n; i++) {
+            int currentNumber = i;
+            while (currentNumber > 0) {
+                int digit = currentNumber % 10;
+                if (digit == 1) {
+                    count++;
+                }
+                currentNumber /= 10;
+            }
+        }
+        return count;
+    }
+}

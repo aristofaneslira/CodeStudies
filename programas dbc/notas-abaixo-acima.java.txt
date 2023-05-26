@@ -1,0 +1,46 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class Main {
+    public static void main(String args[]) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String inputFromQuestion = br.readLine();
+
+        
+        List<Double> notas = new ArrayList<>();
+        String[] notasStr = inputFromQuestion.split(",");
+        for (String notaStr : notasStr) {
+            double nota = Double.parseDouble(notaStr);
+            notas.add(nota);
+        }
+
+        double media = notas.stream().mapToDouble(Double::doubleValue).average().orElse(0);
+
+        List<Double> abaixoMedia = new ArrayList<>();
+        List<Double> acimaMedia = new ArrayList<>();
+
+        notas.stream().forEach(nota -> {
+            if (nota < media) {
+                abaixoMedia.add(nota);
+            } else if (nota > media) {
+                acimaMedia.add(nota);
+            }
+        });
+         
+        String abaixoMediaString = abaixoMedia.stream()
+                .map(nota -> nota % 1 == 0 ? String.valueOf(nota.intValue()) : String.valueOf(nota))
+                .collect(Collectors.joining(", "));
+        System.out.println(abaixoMediaString);
+
+       
+        String acimaMediaString = acimaMedia.stream()
+                .map(nota -> nota % 1 == 0 ? String.valueOf(nota.intValue()) : String.valueOf(nota))
+                .collect(Collectors.joining(", "));
+        System.out.println(acimaMediaString);
+      
+    }
+}

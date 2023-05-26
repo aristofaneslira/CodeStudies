@@ -1,0 +1,54 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class Notas {
+    public static void main(String[] args) {
+        List<Double> notas = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+
+        double nota;
+        do {
+            nota = scanner.nextDouble();
+
+            if (nota != -1) {
+                notas.add(nota);
+            }
+        } while (nota != -1);
+
+        double media = calcularMedia(notas);
+
+        List<Double> abaixoMedia = new ArrayList<>();
+        List<Double> acimaMedia = new ArrayList<>();
+
+        for (double n : notas) {
+            if (n < media) {
+                abaixoMedia.add(n);
+            } else if (n > media) {
+                acimaMedia.add(n);
+            }
+        }
+
+       
+        exibirConjuntoNotas(abaixoMedia);
+
+        
+        exibirConjuntoNotas(acimaMedia);
+    }
+
+    private static double calcularMedia(List<Double> notas) {
+        double soma = 0;
+
+        for (double nota : notas) {
+            soma += nota;
+        }
+
+        return soma/notas.size();
+    }
+
+    private static void exibirConjuntoNotas(List<Double> notas) {
+        for (double nota : notas) {
+            System.out.print(nota);
+        }
+    }
+}

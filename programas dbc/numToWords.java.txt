@@ -1,0 +1,52 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
+class Main {
+    public static void main(String args[]) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String inputFromQuestion = br.readLine();
+        int n = Integer.parseInt(inputFromQuestion);
+
+        String words = numToWords(n);
+        System.out.println("Words: " + words);
+    }
+
+    public static String numToWords(int n) {
+        if (n == 0) {
+            return "Zero";
+        }
+
+        String[] units = {
+                "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+                "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen",
+                "Eighteen", "Nineteen"
+        };
+
+        String[] tens = {
+                "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
+        };
+
+        String[] hundreds = {
+                "", "One Hundred", "Two Hundred", "Three Hundred", "Four Hundred",
+                "Five Hundred", "Six Hundred", "Seven Hundred", "Eight Hundred", "Nine Hundred"
+        };
+
+        String result = "";
+
+        int numHundred = n / 100;
+        if (numHundred > 0) {
+            result += hundreds[numHundred] + " ";
+        }
+
+        int numTens = (n % 100) / 10;
+        int numUnits = (n % 10);
+        if (numTens >= 2) {
+            result += tens[numTens] + " " + units[numUnits];
+        } else {
+            result += units[numTens * 10 + numUnits];
+        }
+
+        return result.trim();
+    }
+}

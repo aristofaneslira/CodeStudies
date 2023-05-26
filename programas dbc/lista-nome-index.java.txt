@@ -1,0 +1,20 @@
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
+
+public class Main {
+    public static void main(String args[]) throws Exception {
+
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String inputData = br.readLine();
+
+        List<String> inputList = Arrays.asList(inputData.split(", "));
+
+        List<String> names = inputList.subList(0, inputList.size() - 1);
+
+        int index = Integer.parseInt(inputList.get(inputList.size() - 1));
+
+        System.out.println(names.get(index));
+    }
+}
