@@ -1,0 +1,50 @@
+import java.util.*;
+
+class Result {
+    public static List<List<String>> getSearchResults(List<String> words, List<String> queries) {
+        List<List<String>> results = new ArrayList<>();
+
+        // Mapeia cada palavra para uma lista de anagramas
+        Map<String, List<String>> anagramMap = new HashMap<>();
+        for (String word : words) {
+            char[] wordChars = word.toCharArray();
+            Arrays.sort(wordChars);
+            String sortedWord = new String(wordChars);
+
+            List<String> anagrams = anagramMap.getOrDefault(sortedWord, new ArrayList<>());
+            anagrams.add(word);
+            anagramMap.put(sortedWord, anagrams);
+        }
+
+        // Para cada consulta, encontra os anagramas
+        for (String query : queries) {
+            char[] queryChars = query.toCharArray();
+            Arrays.sort(queryChars);
+            String sortedQuery = new String(queryChars);
+
+            List<String> anagrams = anagramMap.getOrDefault(sortedQuery, new ArrayList<>());
+            Collections.sort(anagrams);
+
+            results.add(anagrams);
+        }
+
+        return results;
+    }
+}
+
+//testes
+public class Solution {
+    public static void main(String[] args) {
+        List<String> words = Arrays.asList("cat", "dog", "tac", "god", "act");
+        List<String> queries = Arrays.asList("cat", "dog", "act");
+
+        List<List<String>> result = Result.getSearchResults(words, queries);
+
+        for (List<String> anagrams : result) {
+            for (String word : anagrams) {
+                System.out.print(word + " ");
+            }
+            System.out.println();
+        }
+    }
+}
